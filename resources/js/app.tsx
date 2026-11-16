@@ -8,11 +8,14 @@ import SettingsLayout from '@/layouts/settings/layout';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
+// Halaman publik yang sudah membawa layout sendiri (PublicLayout)
+const PUBLIC_PAGES = ['welcome', 'detail-prodi'];
+
 void createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => {
         switch (true) {
-            case name === 'welcome':
+            case PUBLIC_PAGES.includes(name):
                 return null;
             case name.startsWith('auth/'):
                 return AuthLayout;
