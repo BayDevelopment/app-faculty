@@ -8,7 +8,10 @@ import {
     FlaskConical,
     GraduationCap,
     Handshake,
+    Mail,
+    MapPin,
     Microscope,
+    Phone,
     Quote,
     Users,
     type LucideIcon,
@@ -41,7 +44,7 @@ type Stat = {
     label: string;
     value: number;
     suffix?: string;
-    image: string;
+    icon: string;
 };
 
 type Program = {
@@ -109,22 +112,23 @@ const img = (id: string, w = 1200) =>
     `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
 
 const DEFAULT_FACULTY: Faculty = {
-    name: "Fakultas Teknik dan Sains",
-    university: "Universitas Contoh Nusantara",
+    name: "Fakultas Teknik",
+    university: "Universitas Al-Khairiyah",
     tagline:
-        "Belajar di laboratorium, bekerja bersama industri, lulus siap berkarya.",
+        "Belajar teknik lewat praktik, siap bekerja di industri dan proses produksi.",
     description:
-        "Kami mendidik mahasiswa lewat praktikum nyata, magang terstruktur, dan proyek bersama mitra industri, sehingga lulusan langsung paham dunia kerja.",
+        "Fakultas Teknik Universitas Al-Khairiyah menyelenggarakan program studi Teknik Industri dan Teknik Kimia dengan praktikum laboratorium, kunjungan industri, dan proyek bersama mitra.",
     hero_image: img("photo-1523240795612-9a054b0db644"),
-    vision: "Menjadi fakultas unggul di Asia Tenggara dalam pendidikan, riset terapan, dan kerja sama industri pada tahun 2035.",
+    vision: "Menjadi fakultas teknik yang unggul dalam pendidikan, riset terapan, dan kerja sama dengan industri, berlandaskan nilai-nilai keislaman.",
     missions: [
         "Menyelenggarakan pembelajaran berbasis proyek dan praktik laboratorium yang relevan dengan kebutuhan industri.",
-        "Mengembangkan riset terapan yang hasilnya dipakai masyarakat dan dunia usaha.",
-        "Memperluas kerja sama dengan mitra industri, pemerintah, dan perguruan tinggi, di dalam maupun luar negeri.",
-        "Membangun budaya akademik yang jujur, inklusif, dan mendorong mahasiswa berwirausaha.",
+        "Mengembangkan riset terapan di bidang sistem produksi dan proses kimia yang bermanfaat bagi masyarakat dan dunia usaha.",
+        "Memperluas kerja sama dengan industri, pemerintah, dan perguruan tinggi lain.",
+        "Membangun budaya akademik yang jujur, berakhlak, dan mendorong mahasiswa berwirausaha.",
     ],
-    address: "Jl. Pendidikan No. 1, Serang, Banten 42111",
-    email: "fakultas@universitas.ac.id",
+    // TODO: ganti dengan alamat resmi kampus
+    address: "Cilegon, Banten",
+    email: "teknik@alkhairiyah.ac.id",
     phone: "(0254) 123 456",
 };
 
@@ -134,91 +138,51 @@ const DEFAULT_STATS: Stat[] = [
         label: "Mitra industri yang bekerja sama",
         value: 120,
         suffix: "+",
-        image: img("photo-1552664730-d307ca884978"),
+        icon: "handshake",
     },
     {
         id: 2,
         label: "Mahasiswa aktif",
         value: 3450,
         suffix: "",
-        image: img("photo-1523050854058-8df90110c9f1"),
+        icon: "users",
     },
     {
         id: 3,
         label: "Laboratorium",
         value: 18,
         suffix: "",
-        image: img("photo-1581093458791-9f3c3900df4b"),
+        icon: "flask",
     },
     {
         id: 4,
         label: "Dosen",
         value: 85,
         suffix: "",
-        image: img("photo-1524178232363-1fb2b075b655"),
+        icon: "graduation",
     },
 ];
 
 const DEFAULT_PROGRAMS: Program[] = [
     {
         id: 1,
-        slug: "teknik-informatika",
-        name: "Teknik Informatika",
-        degree: "S1",
-        accreditation: "Unggul",
-        description:
-            "Pemrograman, kecerdasan buatan, dan rekayasa perangkat lunak lewat proyek bersama perusahaan teknologi.",
-        student_count: 820,
-    },
-    {
-        id: 2,
-        slug: "teknik-elektro",
-        name: "Teknik Elektro",
-        degree: "S1",
-        accreditation: "Baik Sekali",
-        description:
-            "Sistem tenaga, elektronika, dan otomasi industri dengan praktikum di laboratorium sendiri.",
-        student_count: 540,
-    },
-    {
-        id: 3,
         slug: "teknik-industri",
         name: "Teknik Industri",
         degree: "S1",
-        accreditation: "Unggul",
+        accreditation: "Baik Sekali",
         description:
-            "Perancangan sistem produksi, logistik, dan manajemen mutu untuk pabrik dan layanan.",
-        student_count: 610,
+            "Perancangan sistem produksi, logistik, ergonomi, dan manajemen mutu untuk pabrik dan perusahaan jasa.",
+        student_count: 320,
     },
     {
-        id: 4,
-        slug: "sistem-informasi",
-        name: "Sistem Informasi",
+        id: 2,
+        slug: "teknik-kimia",
+        name: "Teknik Kimia",
         degree: "S1",
         accreditation: "Baik Sekali",
         description:
-            "Analisis data dan sistem bisnis digital untuk organisasi yang sedang bertransformasi.",
-        student_count: 700,
-    },
-    {
-        id: 5,
-        slug: "kimia-terapan",
-        name: "Kimia Terapan",
-        degree: "D4",
-        accreditation: "Baik",
-        description:
-            "Analisis kimia dan pengolahan material dengan standar laboratorium industri.",
+            "Proses pengolahan bahan kimia, energi, dan lingkungan dengan praktikum di laboratorium dan kunjungan ke industri.",
         student_count: 280,
-    },
-    {
-        id: 6,
-        slug: "magister-teknik",
-        name: "Magister Teknik",
-        degree: "S2",
-        accreditation: "Baik Sekali",
-        description:
-            "Riset lanjutan untuk profesional yang ingin memimpin inovasi di bidangnya.",
-        student_count: 140,
     },
 ];
 
@@ -270,31 +234,31 @@ const DEFAULT_SERVICES: Service[] = [
 const DEFAULT_NEWS: News[] = [
     {
         id: 1,
-        slug: "kerja-sama-industri-baru",
-        title: "Fakultas menandatangani kerja sama dengan 12 mitra industri baru",
+        slug: "kunjungan-industri-teknik-kimia",
+        title: "Mahasiswa Teknik Kimia mengikuti kunjungan industri ke pabrik petrokimia",
         excerpt:
-            "Kerja sama mencakup magang bersertifikat, kelas tamu, dan riset terapan bersama.",
-        category: "Kerja sama",
-        image: img("photo-1521737604893-d14cc237f11d"),
+            "Mahasiswa melihat langsung proses produksi dan berdiskusi dengan para insinyur di lokasi.",
+        category: "Kegiatan",
+        image: img("photo-1581093458791-9f3c3900df4b"),
         published_at: "2026-11-10",
     },
     {
         id: 2,
-        slug: "juara-kompetisi-nasional",
-        title: "Tim mahasiswa meraih juara pertama kompetisi robotika nasional",
+        slug: "kerja-sama-industri-baru",
+        title: "Fakultas Teknik menjalin kerja sama magang dengan mitra industri",
         excerpt:
-            "Tim beranggotakan lima mahasiswa Teknik Elektro menyingkirkan 64 peserta dari seluruh Indonesia.",
-        category: "Prestasi",
-        image: img("photo-1485827404703-89b55fcc595e"),
+            "Kerja sama mencakup magang, kelas tamu, dan proyek tugas akhir bersama.",
+        category: "Kerja sama",
+        image: img("photo-1521737604893-d14cc237f11d"),
         published_at: "2026-11-04",
     },
     {
         id: 3,
-        slug: "laboratorium-baru",
-        title: "Laboratorium kecerdasan buatan resmi dibuka untuk mahasiswa",
+        slug: "praktikum-laboratorium",
+        title: "Praktikum Teknik Industri kini memakai simulasi lini produksi",
         excerpt:
-            "Laboratorium dilengkapi 40 stasiun kerja GPU dan dapat dipakai untuk tugas akhir.",
-        category: "Fasilitas",
+            "Mahasiswa merancang dan menguji tata letak pabrik sebelum menerapkannya di proyek akhir.",
+        category: "Akademik",
         image: img("photo-1581092918056-0c4c3acd3789"),
         published_at: "2026-10-28",
     },
@@ -304,28 +268,28 @@ const DEFAULT_TESTIMONIALS: Testimonial[] = [
     {
         id: 1,
         name: "Rina Maharani",
-        batch: "Angkatan 2017",
-        job: "Software Engineer",
-        company: "Perusahaan Teknologi Nasional",
-        quote: "Proyek akhir saya dikerjakan bersama perusahaan mitra fakultas. Dua minggu setelah sidang, saya sudah ditawari kerja di sana.",
+        batch: "Alumni Teknik Industri",
+        job: "Staf Perencanaan Produksi",
+        company: "Perusahaan Manufaktur",
+        quote: "Proyek tata letak pabrik di kampus sangat membantu saya saat mulai bekerja di bagian perencanaan produksi.",
         photo: img("photo-1494790108377-be9c29b29330", 300),
     },
     {
         id: 2,
         name: "Dimas Prakoso",
-        batch: "Angkatan 2015",
-        job: "Production Manager",
-        company: "Manufaktur Mandiri",
-        quote: "Praktikum di laboratorium membuat saya terbiasa memakai alat yang sama dengan yang ada di pabrik.",
+        batch: "Alumni Teknik Kimia",
+        job: "Analis Laboratorium",
+        company: "Perusahaan Kimia",
+        quote: "Praktikum di laboratorium membuat saya terbiasa dengan prosedur dan alat yang dipakai di industri.",
         photo: img("photo-1500648767791-00dcc994a43e", 300),
     },
     {
         id: 3,
         name: "Sari Wulandari",
-        batch: "Angkatan 2019",
-        job: "Founder",
-        company: "Startup Agritech",
-        quote: "Dosen pembimbing membantu saya mengubah tugas akhir menjadi usaha rintisan. Sekarang kami melayani 300 petani.",
+        batch: "Alumni Teknik Industri",
+        job: "Pendiri",
+        company: "Usaha Rintisan Logistik",
+        quote: "Dosen pembimbing membantu saya mengembangkan tugas akhir menjadi usaha yang kini berjalan.",
         photo: img("photo-1438761681033-6461ffad8d80", 300),
     },
 ];
@@ -339,6 +303,11 @@ const ICONS: Record<string, LucideIcon> = {
     users: Users,
     building: Building2,
 };
+
+/* Lokasi kampus untuk peta (tanpa API key). Ubah query bila pin kurang tepat. */
+const MAP_QUERY = "Universitas Al-Khairiyah, Cilegon, Banten";
+const MAP_EMBED = `https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}&output=embed`;
+const MAP_LINK = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAP_QUERY)}`;
 
 /** Menerima array biasa (data contoh) maupun hasil paginate Laravel. */
 function toPage<T>(value: Paginated<T> | T[]): Paginated<T> {
@@ -386,6 +355,11 @@ const formatNumber = (n: number) => n.toLocaleString("id-ID");
 /** Jeda bergilir per kolom, supaya baris bawah tidak menunggu terlalu lama. */
 const stagger = (i: number, cols = 3) => (i % cols) * 110;
 
+/** Sembunyikan gambar yang gagal dimuat agar tidak muncul ikon rusak. */
+const hideBroken = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.style.visibility = "hidden";
+};
+
 function SectionHeading({
     title,
     text,
@@ -428,8 +402,6 @@ export default function Welcome({
     const programs = toPage(programsProp);
     const services = toPage(servicesProp);
 
-    const mainStat = stats[0];
-    const otherStats = stats.slice(1);
     const current = testimonials[activeTestimonial];
 
     return (
@@ -447,7 +419,7 @@ export default function Welcome({
                         <Reveal>
                             <p className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white/70 px-3 py-1 text-sm font-medium text-indigo-800 backdrop-blur">
                                 <span className="h-2 w-2 rounded-full bg-teal-500" />
-                                Penerimaan mahasiswa baru 2027 telah dibuka
+                                Universitas Al-Khairiyah
                             </p>
                         </Reveal>
 
@@ -493,7 +465,7 @@ export default function Welcome({
                                 <img
                                     src={faculty.hero_image}
                                     alt="Mahasiswa berdiskusi di kampus"
-                                    className="h-full w-full rounded-3xl object-cover shadow-xl"
+                                    className="h-full w-full rounded-3xl bg-indigo-100 object-cover shadow-xl"
                                 />
                             </Reveal>
                             <Reveal
@@ -506,7 +478,7 @@ export default function Welcome({
                                         700,
                                     )}
                                     alt="Praktikum di laboratorium"
-                                    className="h-full w-full rounded-3xl object-cover shadow-xl"
+                                    className="h-full w-full rounded-3xl bg-teal-100 object-cover shadow-xl"
                                 />
                             </Reveal>
                             <Reveal
@@ -519,7 +491,7 @@ export default function Welcome({
                                         700,
                                     )}
                                     alt="Mahasiswa belajar kelompok"
-                                    className="h-full w-full rounded-3xl object-cover shadow-xl"
+                                    className="h-full w-full rounded-3xl bg-amber-100 object-cover shadow-xl"
                                 />
                             </Reveal>
                             <Reveal
@@ -532,7 +504,7 @@ export default function Welcome({
                                         900,
                                     )}
                                     alt="Mahasiswa memakai peralatan laboratorium"
-                                    className="h-full w-full rounded-3xl object-cover shadow-xl"
+                                    className="h-full w-full rounded-3xl bg-sky-100 object-cover shadow-xl"
                                 />
                             </Reveal>
                         </div>
@@ -540,58 +512,35 @@ export default function Welcome({
                 </div>
             </section>
 
-            {/* ============ STATISTIK (card + foto) ============ */}
+            {/* ============ STATISTIK ============ */}
             <section
                 aria-label="Angka fakultas"
                 className="relative z-10 -mt-12 pb-20 lg:-mt-16"
             >
-                <div className="mx-auto grid max-w-7xl gap-4 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
-                    {mainStat && (
-                        <Reveal className="col-span-full lg:col-span-2 lg:row-span-2">
-                            <article className="group relative isolate h-full overflow-hidden rounded-3xl">
-                                <img
-                                    src={mainStat.image}
-                                    alt=""
-                                    className="absolute inset-0 -z-20 h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                                />
-                                <div className="absolute inset-0 -z-10 bg-gradient-to-t from-indigo-950 via-indigo-950/70 to-indigo-900/20" />
-                                <div className="flex h-full min-h-[22rem] flex-col justify-end p-8">
-                                    <span className="mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-white/15 text-white backdrop-blur">
-                                        <Handshake className="h-6 w-6" />
+                <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
+                    {stats.map((s, i) => {
+                        const Icon = ICONS[s.icon] ?? Building2;
+                        return (
+                            <Reveal
+                                key={s.id}
+                                delay={i * 110}
+                                className="h-full"
+                            >
+                                <article className="flex h-full flex-col items-start rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-indigo-900/5">
+                                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-indigo-100 text-indigo-700">
+                                        <Icon className="h-6 w-6" />
                                     </span>
-                                    <p className="text-6xl font-extrabold text-white">
-                                        {formatNumber(mainStat.value)}
-                                        {mainStat.suffix}
-                                    </p>
-                                    <p className="mt-2 text-lg font-medium text-indigo-100">
-                                        {mainStat.label}
-                                    </p>
-                                </div>
-                            </article>
-                        </Reveal>
-                    )}
-
-                    {otherStats.map((s, i) => (
-                        <Reveal key={s.id} delay={150 + i * 110}>
-                            <article className="group relative isolate h-full overflow-hidden rounded-3xl">
-                                <img
-                                    src={s.image}
-                                    alt=""
-                                    className="absolute inset-0 -z-20 h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                                />
-                                <div className="absolute inset-0 -z-10 bg-gradient-to-t from-teal-950/90 via-indigo-950/50 to-transparent" />
-                                <div className="flex h-full min-h-[10.5rem] flex-col justify-end p-5">
-                                    <p className="text-4xl font-extrabold text-white">
+                                    <p className="mt-5 text-4xl font-extrabold text-indigo-950">
                                         {formatNumber(s.value)}
                                         {s.suffix}
                                     </p>
-                                    <p className="mt-1 text-sm font-medium text-teal-50">
+                                    <p className="mt-1 text-sm font-medium text-slate-600">
                                         {s.label}
                                     </p>
-                                </div>
-                            </article>
-                        </Reveal>
-                    ))}
+                                </article>
+                            </Reveal>
+                        );
+                    })}
                 </div>
             </section>
 
@@ -656,7 +605,11 @@ export default function Welcome({
                         text="Pilih jalur belajar yang sesuai dengan minat dan rencana kariermu."
                     />
 
-                    <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <div
+                        className={`mt-12 grid gap-6 sm:grid-cols-2 ${
+                            programs.data.length > 2 ? "lg:grid-cols-3" : ""
+                        }`}
+                    >
                         {programs.data.map((p, i) => (
                             <Reveal
                                 key={p.id}
@@ -812,21 +765,18 @@ export default function Welcome({
                                     href={`/berita/${n.slug}`}
                                     className="group block h-full overflow-hidden rounded-3xl border border-slate-200 bg-white transition hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-900/5"
                                 >
-                                    {/* Gambar */}
-                                    <div className="relative aspect-[16/10] overflow-hidden">
+                                    <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
                                         <img
                                             src={n.image}
                                             alt={n.title}
+                                            onError={hideBroken}
                                             className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                                         />
-
-                                        {/* Category */}
                                         <span className="absolute left-4 top-4 rounded-lg bg-white/90 px-2.5 py-1 text-sm font-semibold text-indigo-700 backdrop-blur">
                                             {n.category}
                                         </span>
                                     </div>
 
-                                    {/* Konten */}
                                     <div className="p-6">
                                         <p className="flex items-center gap-1.5 text-sm text-slate-500">
                                             <Calendar className="h-4 w-4" />
@@ -841,7 +791,6 @@ export default function Welcome({
                                             {n.excerpt}
                                         </p>
 
-                                        {/* Tombol visual */}
                                         <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-indigo-700">
                                             Baca selengkapnya
                                             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -883,7 +832,7 @@ export default function Welcome({
                                         <img
                                             src={current.photo}
                                             alt={current.name}
-                                            className="h-14 w-14 rounded-full object-cover ring-4 ring-indigo-100"
+                                            className="h-14 w-14 rounded-full bg-indigo-100 object-cover ring-4 ring-indigo-100"
                                         />
                                         <div>
                                             <p className="font-bold text-indigo-950">
@@ -892,7 +841,7 @@ export default function Welcome({
                                             <p className="text-sm text-slate-500">
                                                 {current.job}, {current.company}
                                             </p>
-                                            <p className="text-sm text-slate-400">
+                                            <p className="text-sm text-slate-500">
                                                 {current.batch}
                                             </p>
                                         </div>
@@ -918,7 +867,7 @@ export default function Welcome({
                                             onClick={() =>
                                                 setActiveTestimonial(i)
                                             }
-                                            className={`h-14 w-14 overflow-hidden rounded-full ring-2 transition ${
+                                            className={`h-14 w-14 overflow-hidden rounded-full bg-indigo-100 ring-2 transition ${
                                                 i === activeTestimonial
                                                     ? "scale-110 ring-indigo-600"
                                                     : "opacity-60 ring-transparent hover:opacity-100"
@@ -937,6 +886,97 @@ export default function Welcome({
                     </div>
                 </section>
             )}
+
+            {/* ============ LOKASI ============ */}
+            <section
+                id="lokasi"
+                className="relative overflow-hidden py-20 lg:py-28"
+            >
+                <Blob className="-left-24 top-10 h-80 w-80 bg-gradient-to-br from-teal-200/50 to-sky-200/40" />
+                <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <SectionHeading
+                        title="Lokasi kampus"
+                        text="Kunjungi kami langsung atau hubungi untuk informasi lebih lanjut."
+                    />
+
+                    <div className="mt-12 grid gap-6 lg:grid-cols-5">
+                        <Reveal className="lg:col-span-2">
+                            <div className="flex h-full flex-col gap-5 rounded-3xl border border-slate-200 bg-white/80 p-7 backdrop-blur">
+                                <div className="flex gap-4">
+                                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-indigo-100 text-indigo-700">
+                                        <MapPin className="h-5 w-5" />
+                                    </span>
+                                    <div>
+                                        <p className="font-bold text-indigo-950">
+                                            Alamat
+                                        </p>
+                                        <p className="mt-1 text-slate-600">
+                                            {faculty.university}
+                                        </p>
+                                        <p className="text-slate-600">
+                                            {faculty.address}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-teal-100 text-teal-700">
+                                        <Mail className="h-5 w-5" />
+                                    </span>
+                                    <div>
+                                        <p className="font-bold text-indigo-950">
+                                            Email
+                                        </p>
+                                        <a
+                                            href={`mailto:${faculty.email}`}
+                                            className="mt-1 block text-slate-600 hover:text-indigo-700"
+                                        >
+                                            {faculty.email}
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-amber-100 text-amber-700">
+                                        <Phone className="h-5 w-5" />
+                                    </span>
+                                    <div>
+                                        <p className="font-bold text-indigo-950">
+                                            Telepon
+                                        </p>
+                                        <p className="mt-1 text-slate-600">
+                                            {faculty.phone}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <a
+                                    href={MAP_LINK}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-auto inline-flex w-fit items-center gap-2 rounded-xl bg-indigo-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-800"
+                                >
+                                    Buka di Google Maps
+                                    <ArrowRight className="h-4 w-4" />
+                                </a>
+                            </div>
+                        </Reveal>
+
+                        <Reveal delay={150} className="lg:col-span-3">
+                            <div className="h-full min-h-[22rem] overflow-hidden rounded-3xl border border-slate-200 shadow-lg shadow-indigo-900/5">
+                                <iframe
+                                    title="Peta lokasi Universitas Al-Khairiyah"
+                                    src={MAP_EMBED}
+                                    className="h-full min-h-[22rem] w-full"
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    allowFullScreen
+                                />
+                            </div>
+                        </Reveal>
+                    </div>
+                </div>
+            </section>
         </PublicLayout>
     );
 }

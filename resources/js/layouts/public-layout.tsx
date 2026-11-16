@@ -13,12 +13,13 @@ export type FacultyInfo = {
 };
 
 const FALLBACK: FacultyInfo = {
-    name: "Fakultas Teknik dan Sains",
-    university: "Universitas Contoh Nusantara",
+    name: "Fakultas Teknik",
+    university: "Universitas Al-Khairiyah",
     description:
-        "Kami mendidik mahasiswa lewat praktikum nyata, magang terstruktur, dan proyek bersama mitra industri.",
-    address: "Jl. Pendidikan No. 1, Serang, Banten 42111",
-    email: "fakultas@universitas.ac.id",
+        "Fakultas Teknik Universitas Al-Khairiyah menyelenggarakan program studi Teknik Industri dan Teknik Kimia dengan praktikum laboratorium dan kerja sama industri.",
+    // TODO: ganti dengan alamat resmi kampus
+    address: "Cilegon, Banten",
+    email: "teknik@alkhairiyah.ac.id",
     phone: "(0254) 123 456",
 };
 
@@ -30,6 +31,7 @@ export const NAV = [
     { label: "Layanan", href: "/#layanan" },
     { label: "Berita", href: "/#berita" },
     { label: "Alumni", href: "/#alumni" },
+    { label: "Lokasi", href: "/#lokasi" },
 ];
 
 type Props = {
