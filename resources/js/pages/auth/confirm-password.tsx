@@ -1,61 +1,55 @@
-import { Form, Head } from '@inertiajs/react';
-import InputError from '@/components/input-error';
-import PasswordInput from '@/components/password-input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { store } from '@/routes/password/confirm';
-/* @chisel-passkeys */
-import {
-    index as confirmOptions,
-    store as confirmStore,
-} from '@/actions/Laravel/Passkeys/Http/Controllers/PasskeyConfirmationController';
-import PasskeyVerify from '@/components/passkey-verify';
-/* @end-chisel-passkeys */
+import { Form, Head } from "@inertiajs/react";
+import type { ReactNode } from "react";
+import InputError from "@/components/input-error";
+import PasswordInput from "@/components/password-input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import AuthSplitLayout from "@/layouts/auth-split-layout";
+import { store } from "@/routes/password/confirm";
+
+/** Gaya kolom isian, sama dengan halaman login. */
+const fieldClass =
+    "h-12 rounded-xl border-slate-200 bg-slate-50 text-base text-slate-800 placeholder:text-slate-400 focus-visible:border-indigo-400 focus-visible:bg-white focus-visible:ring-indigo-100";
 
 export default function ConfirmPassword() {
     return (
         <>
-            <Head title="Confirm password" />
+            <Head title="Konfirmasi kata sandi" />
 
-            {/* @chisel-passkeys */}
-            <PasskeyVerify
-                routes={{
-                    options: confirmOptions(),
-                    submit: confirmStore(),
-                }}
-                label="Confirm with passkey"
-                loadingLabel="Confirming..."
-                separator="Or confirm with password"
-            />
-            {/* @end-chisel-passkeys */}
-
-            <Form {...store.form()} resetOnSuccess={['password']}>
+            <Form {...store.form()} resetOnSuccess={["password"]}>
                 {({ processing, errors }) => (
                     <div className="space-y-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label
+                                htmlFor="password"
+                                className="text-slate-700"
+                            >
+                                Kata sandi
+                            </Label>
                             <PasswordInput
                                 id="password"
                                 name="password"
-                                placeholder="Password"
+                                placeholder="Kata sandi"
                                 autoComplete="current-password"
                                 autoFocus
+                                tabIndex={1}
+                                className={fieldClass}
                             />
 
                             <InputError message={errors.password} />
                         </div>
 
-                        <div className="flex items-center">
-                            <Button
-                                className="w-full"
-                                disabled={processing}
-                                data-test="confirm-password-button"
-                            >
-                                {processing && <Spinner />}
-                                Confirm password
-                            </Button>
-                        </div>
+                        <Button
+                            type="submit"
+                            className="h-12 w-full rounded-xl bg-indigo-700 text-base font-semibold text-white shadow-lg shadow-indigo-700/25 transition hover:bg-indigo-800"
+                            tabIndex={2}
+                            disabled={processing}
+                            data-test="confirm-password-button"
+                        >
+                            {processing && <Spinner />}
+                            Konfirmasi kata sandi
+                        </Button>
                     </div>
                 )}
             </Form>
@@ -63,8 +57,11 @@ export default function ConfirmPassword() {
     );
 }
 
-ConfirmPassword.layout = {
-    title: 'Confirm password',
-    description:
-        'This is a secure area of the application. Please confirm your password before continuing.',
-};
+ConfirmPassword.layout = (page: ReactNode) => (
+    <AuthSplitLayout
+        title="Konfirmasi kata sandi"
+        description="Ini adalah area aman aplikasi. Mohon konfirmasi kata sandi Anda sebelum melanjutkan."
+    >
+        {page}
+    </AuthSplitLayout>
+);

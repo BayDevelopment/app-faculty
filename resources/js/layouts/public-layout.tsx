@@ -1,7 +1,7 @@
-import { usePage } from '@inertiajs/react';
-import { GraduationCap, Mail, MapPin, Menu, Phone, X } from 'lucide-react';
-import { useEffect, useState, type ReactNode } from 'react';
-import Blob from '@/components/blob';
+import { usePage } from "@inertiajs/react";
+import { GraduationCap, Mail, MapPin, Menu, Phone, X } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import Blob from "@/components/blob";
 
 export type FacultyInfo = {
     name: string;
@@ -13,22 +13,23 @@ export type FacultyInfo = {
 };
 
 const FALLBACK: FacultyInfo = {
-    name: 'Fakultas Teknik dan Sains',
-    university: 'Universitas Contoh Nusantara',
-    description: 'Kami mendidik mahasiswa lewat praktikum nyata, magang terstruktur, dan proyek bersama mitra industri.',
-    address: 'Jl. Pendidikan No. 1, Serang, Banten 42111',
-    email: 'fakultas@universitas.ac.id',
-    phone: '(0254) 123 456',
+    name: "Fakultas Teknik dan Sains",
+    university: "Universitas Contoh Nusantara",
+    description:
+        "Kami mendidik mahasiswa lewat praktikum nyata, magang terstruktur, dan proyek bersama mitra industri.",
+    address: "Jl. Pendidikan No. 1, Serang, Banten 42111",
+    email: "fakultas@universitas.ac.id",
+    phone: "(0254) 123 456",
 };
 
 // Memakai "/#..." supaya tautan tetap benar saat dibuka dari halaman selain beranda.
 export const NAV = [
-    { label: 'Beranda', href: '/#beranda' },
-    { label: 'Visi dan misi', href: '/#visi-misi' },
-    { label: 'Program studi', href: '/#prodi' },
-    { label: 'Layanan', href: '/#layanan' },
-    { label: 'Berita', href: '/#berita' },
-    { label: 'Alumni', href: '/#alumni' },
+    { label: "Beranda", href: "/#beranda" },
+    { label: "Visi dan misi", href: "/#visi-misi" },
+    { label: "Program studi", href: "/#prodi" },
+    { label: "Layanan", href: "/#layanan" },
+    { label: "Berita", href: "/#berita" },
+    { label: "Alumni", href: "/#alumni" },
 ];
 
 type Props = {
@@ -39,7 +40,11 @@ type Props = {
     solidNav?: boolean;
 };
 
-export default function PublicLayout({ children, faculty, solidNav = false }: Props) {
+export default function PublicLayout({
+    children,
+    faculty,
+    solidNav = false,
+}: Props) {
     const shared = usePage<{ faculty?: FacultyInfo }>().props.faculty;
     const info = faculty ?? shared ?? FALLBACK;
 
@@ -49,8 +54,8 @@ export default function PublicLayout({ children, faculty, solidNav = false }: Pr
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12);
         onScroll();
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
     // Saat menu seluler terbuka, navbar tetap diberi latar agar menu terbaca
@@ -61,9 +66,11 @@ export default function PublicLayout({ children, faculty, solidNav = false }: Pr
             {/* ============ NAVBAR ============ */}
             <header
                 className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
-                    solid
-                        ? 'border-white/60 bg-white/75 shadow-sm shadow-indigo-900/5 backdrop-blur-lg'
-                        : 'border-transparent bg-transparent'
+                    menuOpen
+                        ? "border-slate-200 bg-white shadow-sm shadow-indigo-900/5"
+                        : solid
+                          ? "border-white/60 bg-white/75 shadow-sm shadow-indigo-900/5 backdrop-blur-lg"
+                          : "border-transparent bg-transparent"
                 }`}
             >
                 <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -72,12 +79,19 @@ export default function PublicLayout({ children, faculty, solidNav = false }: Pr
                             <GraduationCap className="h-5 w-5" />
                         </span>
                         <span className="leading-tight">
-                            <span className="block text-sm font-bold text-indigo-950">{info.name}</span>
-                            <span className="block text-xs text-slate-500">{info.university}</span>
+                            <span className="block text-sm font-bold text-indigo-950">
+                                {info.name}
+                            </span>
+                            <span className="block text-xs text-slate-500">
+                                {info.university}
+                            </span>
                         </span>
                     </a>
 
-                    <nav className="hidden items-center gap-1 lg:flex" aria-label="Navigasi utama">
+                    <nav
+                        className="hidden items-center gap-1 lg:flex"
+                        aria-label="Navigasi utama"
+                    >
                         {NAV.map((item) => (
                             <a
                                 key={item.href}
@@ -89,31 +103,69 @@ export default function PublicLayout({ children, faculty, solidNav = false }: Pr
                         ))}
                     </nav>
 
+                    {/* Hamburger: ikon berputar dan saling menggantikan */}
                     <button
                         type="button"
                         onClick={() => setMenuOpen((v) => !v)}
-                        className="grid h-10 w-10 place-items-center rounded-lg text-indigo-900 hover:bg-indigo-50 lg:hidden"
-                        aria-label={menuOpen ? 'Tutup menu' : 'Buka menu'}
+                        className="relative grid h-10 w-10 place-items-center rounded-lg text-indigo-900 transition hover:bg-indigo-50 lg:hidden"
+                        aria-label={menuOpen ? "Tutup menu" : "Buka menu"}
                         aria-expanded={menuOpen}
+                        aria-controls="mobile-menu"
                     >
-                        {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                        <Menu
+                            className={`absolute h-5 w-5 transition-all duration-300 motion-reduce:transition-none ${
+                                menuOpen
+                                    ? "rotate-90 scale-50 opacity-0"
+                                    : "rotate-0 scale-100 opacity-100"
+                            }`}
+                        />
+                        <X
+                            className={`absolute h-5 w-5 transition-all duration-300 motion-reduce:transition-none ${
+                                menuOpen
+                                    ? "rotate-0 scale-100 opacity-100"
+                                    : "-rotate-90 scale-50 opacity-0"
+                            }`}
+                        />
                     </button>
                 </div>
 
-                {menuOpen && (
-                    <nav className="border-t border-slate-200 bg-white px-4 py-3 lg:hidden" aria-label="Navigasi seluler">
-                        {NAV.map((item) => (
-                            <a
-                                key={item.href}
-                                href={item.href}
-                                onClick={() => setMenuOpen(false)}
-                                className="block rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-indigo-50"
-                            >
-                                {item.label}
-                            </a>
-                        ))}
-                    </nav>
-                )}
+                {/* Menu seluler: selalu dirender agar bisa dianimasikan masuk dan keluar */}
+                <div
+                    id="mobile-menu"
+                    aria-hidden={!menuOpen}
+                    className={`grid transition-[grid-template-rows,opacity,visibility] duration-300 ease-out motion-reduce:transition-none lg:hidden ${
+                        menuOpen
+                            ? "visible grid-rows-[1fr] opacity-100"
+                            : "invisible grid-rows-[0fr] opacity-0"
+                    }`}
+                >
+                    <div className="overflow-hidden">
+                        <nav
+                            className="border-t border-slate-200 px-4 py-3"
+                            aria-label="Navigasi seluler"
+                        >
+                            {NAV.map((item, i) => (
+                                <a
+                                    key={item.href}
+                                    href={item.href}
+                                    onClick={() => setMenuOpen(false)}
+                                    style={{
+                                        transitionDelay: menuOpen
+                                            ? `${80 + i * 45}ms`
+                                            : "0ms",
+                                    }}
+                                    className={`block rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 transition-all duration-300 hover:bg-indigo-50 hover:text-indigo-700 motion-reduce:transition-none ${
+                                        menuOpen
+                                            ? "translate-y-0 opacity-100"
+                                            : "-translate-y-2 opacity-0"
+                                    }`}
+                                >
+                                    {item.label}
+                                </a>
+                            ))}
+                        </nav>
+                    </div>
+                </div>
             </header>
 
             <main>{children}</main>
@@ -130,11 +182,15 @@ export default function PublicLayout({ children, faculty, solidNav = false }: Pr
                                 <GraduationCap className="h-5 w-5" />
                             </span>
                             <div>
-                                <p className="font-bold text-white">{info.name}</p>
+                                <p className="font-bold text-white">
+                                    {info.name}
+                                </p>
                                 <p className="text-sm">{info.university}</p>
                             </div>
                         </div>
-                        <p className="mt-5 max-w-md leading-relaxed">{info.description}</p>
+                        <p className="mt-5 max-w-md leading-relaxed">
+                            {info.description}
+                        </p>
                     </div>
 
                     <div>
@@ -142,7 +198,10 @@ export default function PublicLayout({ children, faculty, solidNav = false }: Pr
                         <ul className="mt-4 space-y-2.5 text-sm">
                             {NAV.map((n) => (
                                 <li key={n.href}>
-                                    <a href={n.href} className="transition hover:text-white">
+                                    <a
+                                        href={n.href}
+                                        className="transition hover:text-white"
+                                    >
                                         {n.label}
                                     </a>
                                 </li>
@@ -172,10 +231,14 @@ export default function PublicLayout({ children, faculty, solidNav = false }: Pr
                 <div className="relative border-t border-white/10">
                     <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-sm text-indigo-300 sm:flex-row sm:px-6 lg:px-8">
                         <p>
-                            © {new Date().getFullYear()} {info.name}, {info.university}. Semua hak dilindungi.
+                            © {new Date().getFullYear()} {info.name},{" "}
+                            {info.university}. Semua hak dilindungi.
                         </p>
                         <p>
-                            Developed by <span className="font-semibold text-white">Bayu Albar Ladici</span>
+                            Developed by{" "}
+                            <span className="font-semibold text-white">
+                                Bayu Albar Ladici
+                            </span>
                         </p>
                     </div>
                 </div>
