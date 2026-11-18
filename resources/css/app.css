@@ -58,7 +58,29 @@
     --color-sidebar-accent: var(--sidebar-accent);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-ring: var(--sidebar-ring);
+        --color-sidebar-ring: var(--sidebar-ring);
+
+    /* Kolase hero: berjalan otomatis atas-bawah */
+    --animate-marquee-up: marquee-up 40s linear infinite;
+    --animate-marquee-down: marquee-down 40s linear infinite;
+
+    @keyframes marquee-up {
+        from {
+            transform: translateY(0);
+        }
+        to {
+            transform: translateY(-50%);
+        }
+    }
+
+    @keyframes marquee-down {
+        from {
+            transform: translateY(-50%);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
 }
 
 :root {

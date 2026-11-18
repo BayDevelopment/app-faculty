@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Faculty;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureResetPasswordEmail();
     }
 
     /**
@@ -37,14 +41,45 @@ class AppServiceProvider extends ServiceProvider
             app()->isProduction(),
         );
 
-        Password::defaults(fn (): ?Password => app()->isProduction()
-            ? Password::min(12)
+        Password::defaults(
+            fn(): ?Password => app()->isProduction()
+                ? Password::min(12)
                 ->mixedCase()
                 ->letters()
                 ->numbers()
                 ->symbols()
                 ->uncompromised()
-            : null,
+                : null,
         );
+    }
+
+    /**
+     * Pakai template email kustom untuk reset password.
+     */
+    protected function configureResetPasswordEmail(): void
+    {
+        ResetPassword::toMailUsing(function ($notifiable, string $token) {
+            $url = url(route('password.reset', [
+                'token' => $token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ], false));
+
+            $broker = config('auth.defaults.passwords');
+            $faculty = Faculty::first();
+
+            return (new MailMessage)
+                ->subject('Atur Ulang Password Akun Anda')
+                ->view('emails.reset-password', [
+                    'url' => $url,
+                    'name' => $notifiable->name,
+                    'expire' => config("auth.passwords.{$broker}.expire"),
+
+                    'appName' => $faculty?->name ?? config('app.name'),
+
+                    'facultyName' => $faculty?->name ?? config('app.name'),
+                    'universityName' => $faculty?->university ?? 'Universitas Al-Khairiyah',
+                    'logoPath' => public_path('logo_unival.png'),
+                ]);
+        });
     }
 }

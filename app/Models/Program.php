@@ -8,12 +8,29 @@ use Illuminate\Database\Eloquent\Model;
 class Program extends Model
 {
     protected $fillable = [
-        'slug', 'name', 'degree', 'accreditation', 'description',
-        'hero_image', 'overview', 'vision', 'duration', 'credits',
-        'head_name', 'head_title', 'head_photo',
-        'competencies', 'curriculum', 'career_prospects', 'facilities', 'admission_requirements',
-        'contact_email', 'contact_phone',
-        'student_count', 'sort_order', 'is_active',
+        'slug',
+        'name',
+        'degree',
+        'accreditation',
+        'description',
+        'hero_image',
+        'overview',
+        'vision',
+        'duration',
+        'credits',
+        'head_name',
+        'head_title',
+        'head_photo',
+        'competencies',
+        'curriculum',
+        'career_prospects',
+        'facilities',
+        'admission_requirements',
+        'contact_email',
+        'contact_phone',
+        'student_count',
+        'sort_order',
+        'is_active',
     ];
 
     protected $casts = [

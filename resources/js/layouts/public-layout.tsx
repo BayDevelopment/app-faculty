@@ -1,5 +1,5 @@
 import { usePage } from "@inertiajs/react";
-import { GraduationCap, Mail, MapPin, Menu, Phone, X } from "lucide-react";
+import { Mail, MapPin, Menu, Phone, X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import Blob from "@/components/blob";
 
@@ -10,17 +10,6 @@ export type FacultyInfo = {
     address: string;
     email: string;
     phone: string;
-};
-
-const FALLBACK: FacultyInfo = {
-    name: "Fakultas Teknik",
-    university: "Universitas Al-Khairiyah",
-    description:
-        "Fakultas Teknik Universitas Al-Khairiyah menyelenggarakan program studi Teknik Industri dan Teknik Kimia dengan praktikum laboratorium dan kerja sama industri.",
-    // TODO: ganti dengan alamat resmi kampus
-    address: "Cilegon, Banten",
-    email: "teknik@alkhairiyah.ac.id",
-    phone: "(0254) 123 456",
 };
 
 // Memakai "/#..." supaya tautan tetap benar saat dibuka dari halaman selain beranda.
@@ -48,8 +37,11 @@ export default function PublicLayout({
     solidNav = false,
 }: Props) {
     const shared = usePage<{ faculty?: FacultyInfo }>().props.faculty;
-    const info = faculty ?? shared ?? FALLBACK;
+    const info = faculty ?? shared;
 
+    if (!info) {
+        throw new Error("Data fakultas tidak ditemukan.");
+    }
     const [menuOpen, setMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -77,9 +69,14 @@ export default function PublicLayout({
             >
                 <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
                     <a href="/#beranda" className="flex items-center gap-3">
-                        <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-teal-500 text-white shadow-md">
-                            <GraduationCap className="h-5 w-5" />
+                        <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white shadow-md">
+                            <img
+                                src="/logo_unival.png"
+                                alt="Logo Universitas Al-Khairiyah"
+                                className="h-full w-full object-contain p-1"
+                            />
                         </span>
+
                         <span className="leading-tight">
                             <span className="block text-sm font-bold text-indigo-950">
                                 {info.name}
@@ -178,64 +175,85 @@ export default function PublicLayout({
                 <Blob className="-right-24 bottom-0 h-80 w-80 bg-gradient-to-br from-teal-400/20 to-emerald-300/5" />
 
                 <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+                    {/* IDENTITAS FAKULTAS */}
                     <div className="lg:col-span-2">
-                        <div className="flex items-center gap-3">
-                            <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 to-teal-400 text-white">
-                                <GraduationCap className="h-5 w-5" />
+                        <a
+                            href="/#beranda"
+                            className="inline-flex items-center gap-3"
+                        >
+                            <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-white shadow-md">
+                                <img
+                                    src="/logo_unival.png"
+                                    alt={`Logo ${info.university}`}
+                                    className="h-full w-full object-contain p-1"
+                                />
                             </span>
-                            <div>
-                                <p className="font-bold text-white">
+
+                            <span className="leading-tight">
+                                <span className="block text-sm font-bold text-white">
                                     {info.name}
-                                </p>
-                                <p className="text-sm">{info.university}</p>
-                            </div>
-                        </div>
-                        <p className="mt-5 max-w-md leading-relaxed">
+                                </span>
+
+                                <span className="block text-xs text-indigo-300">
+                                    {info.university}
+                                </span>
+                            </span>
+                        </a>
+
+                        <p className="mt-5 max-w-md leading-relaxed text-indigo-200">
                             {info.description}
                         </p>
                     </div>
 
+                    {/* TAUTAN */}
                     <div>
                         <h3 className="font-bold text-white">Tautan</h3>
+
                         <ul className="mt-4 space-y-2.5 text-sm">
-                            {NAV.map((n) => (
-                                <li key={n.href}>
+                            {NAV.map((item) => (
+                                <li key={item.href}>
                                     <a
-                                        href={n.href}
+                                        href={item.href}
                                         className="transition hover:text-white"
                                     >
-                                        {n.label}
+                                        {item.label}
                                     </a>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
+                    {/* KONTAK */}
                     <div>
                         <h3 className="font-bold text-white">Hubungi kami</h3>
+
                         <ul className="mt-4 space-y-3 text-sm">
                             <li className="flex gap-3">
                                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" />
-                                {info.address}
+                                <span>{info.address}</span>
                             </li>
+
                             <li className="flex gap-3">
                                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" />
-                                {info.email}
+                                <span>{info.email}</span>
                             </li>
+
                             <li className="flex gap-3">
                                 <Phone className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" />
-                                {info.phone}
+                                <span>{info.phone}</span>
                             </li>
                         </ul>
                     </div>
                 </div>
 
+                {/* COPYRIGHT */}
                 <div className="relative border-t border-white/10">
                     <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-sm text-indigo-300 sm:flex-row sm:px-6 lg:px-8">
                         <p>
                             © {new Date().getFullYear()} {info.name},{" "}
                             {info.university}. Semua hak dilindungi.
                         </p>
+
                         <p>
                             Developed by{" "}
                             <span className="font-semibold text-white">

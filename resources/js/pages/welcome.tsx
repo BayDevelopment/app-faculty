@@ -16,7 +16,7 @@ import {
     Users,
     type LucideIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Blob from "@/components/blob";
 import Pagination from "@/components/pagination";
 import Reveal from "@/components/reveal";
@@ -43,8 +43,8 @@ type Stat = {
     id: number;
     label: string;
     value: number;
-    suffix?: string;
-    icon: string;
+    suffix?: string | null;
+    image?: string | null;
 };
 
 type Program = {
@@ -82,7 +82,12 @@ type Testimonial = {
     job: string;
     company: string;
     quote: string;
-    photo: string;
+    photo: string | null;
+};
+type HeroPhoto = {
+    posisi: number;
+    url: string;
+    alt: string | null;
 };
 
 /** Bentuk data dari `->paginate()` Laravel (hanya field yang dipakai). */
@@ -97,6 +102,7 @@ type Paginated<T> = {
 
 type Props = {
     faculty?: Faculty;
+    heroPhotos?: HeroPhoto[];
     stats?: Stat[];
     programs?: Paginated<Program> | Program[];
     services?: Paginated<Service> | Service[];
@@ -131,6 +137,28 @@ const DEFAULT_FACULTY: Faculty = {
     email: "teknik@alkhairiyah.ac.id",
     phone: "(0254) 123 456",
 };
+const DEFAULT_HERO_PHOTOS: HeroPhoto[] = [
+    {
+        posisi: 1,
+        url: img("photo-1523240795612-9a054b0db644", 1200),
+        alt: "Mahasiswa berdiskusi di kampus",
+    },
+    {
+        posisi: 2,
+        url: img("photo-1532094349884-543bc11b234d", 700),
+        alt: "Praktikum di laboratorium",
+    },
+    {
+        posisi: 3,
+        url: img("photo-1522202176988-66273c2fd55f", 700),
+        alt: "Mahasiswa belajar kelompok",
+    },
+    {
+        posisi: 4,
+        url: img("photo-1581091226825-a6a2a5aee158", 900),
+        alt: "Mahasiswa memakai peralatan laboratorium",
+    },
+];
 
 const DEFAULT_STATS: Stat[] = [
     {
@@ -138,28 +166,28 @@ const DEFAULT_STATS: Stat[] = [
         label: "Mitra industri yang bekerja sama",
         value: 120,
         suffix: "+",
-        icon: "handshake",
+        image: null,
     },
     {
         id: 2,
         label: "Mahasiswa aktif",
         value: 3450,
         suffix: "",
-        icon: "users",
+        image: null,
     },
     {
         id: 3,
         label: "Laboratorium",
         value: 18,
         suffix: "",
-        icon: "flask",
+        image: null,
     },
     {
         id: 4,
         label: "Dosen",
         value: 85,
         suffix: "",
-        icon: "graduation",
+        image: null,
     },
 ];
 
@@ -309,6 +337,71 @@ const MAP_QUERY = "Universitas Al-Khairiyah, Cilegon, Banten";
 const MAP_EMBED = `https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}&output=embed`;
 const MAP_LINK = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAP_QUERY)}`;
 
+function AnimatedNumber({
+    value,
+    duration = 1800,
+}: {
+    value: number;
+    duration?: number;
+}) {
+    const [count, setCount] = useState(0);
+    const [started, setStarted] = useState(false);
+
+    useEffect(() => {
+        const element = document.getElementById(`stat-${value}`);
+
+        if (!element) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && !started) {
+                    setStarted(true);
+                    observer.disconnect();
+                }
+            },
+            {
+                threshold: 0.3,
+            },
+        );
+
+        observer.observe(element);
+
+        return () => observer.disconnect();
+    }, [value, started]);
+
+    useEffect(() => {
+        if (!started) return;
+
+        let startTime: number | null = null;
+        let animationFrame: number;
+
+        const animate = (currentTime: number) => {
+            if (startTime === null) {
+                startTime = currentTime;
+            }
+
+            const progress = Math.min((currentTime - startTime) / duration, 1);
+
+            // Ease-out agar awal cepat lalu melambat
+            const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+            setCount(Math.floor(easedProgress * value));
+
+            if (progress < 1) {
+                animationFrame = requestAnimationFrame(animate);
+            } else {
+                setCount(value);
+            }
+        };
+
+        animationFrame = requestAnimationFrame(animate);
+
+        return () => cancelAnimationFrame(animationFrame);
+    }, [started, value, duration]);
+
+    return <span id={`stat-${value}`}>{formatNumber(count)}</span>;
+}
+
 /** Menerima array biasa (data contoh) maupun hasil paginate Laravel. */
 function toPage<T>(value: Paginated<T> | T[]): Paginated<T> {
     if (Array.isArray(value)) {
@@ -385,12 +478,147 @@ function SectionHeading({
     );
 }
 
+/** Tombol layanan: tidak tampil bila url kosong atau "#". */
+function ServiceLink({ url }: { url?: string | null }) {
+    if (!url || url === "#") {
+        return (
+            <span className="mt-6 inline-flex w-fit rounded-xl bg-white/10 px-4 py-2.5 text-sm font-semibold text-indigo-300">
+                Segera hadir
+            </span>
+        );
+    }
+
+    const cls =
+        "mt-6 inline-flex w-fit items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-indigo-900 transition hover:bg-teal-300 hover:text-indigo-950";
+
+    const content = (
+        <>
+            Pergi sekarang
+            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+        </>
+    );
+
+    // link ke situs lain: <a> biasa, buka di tab baru
+    if (/^https?:\/\//i.test(url)) {
+        return (
+            <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cls}
+            >
+                {content}
+            </a>
+        );
+    }
+
+    // anchor di halaman yang sama, mis. "#kontak"
+    if (url.startsWith("#")) {
+        return (
+            <a href={url} className={cls}>
+                {content}
+            </a>
+        );
+    }
+
+    // path internal, mis. "/layanan/akademik": navigasi Inertia
+    return (
+        <Link href={url} className={cls}>
+            {content}
+        </Link>
+    );
+}
+/** Foto alumni; tanpa foto (atau gagal dimuat) tampil inisial nama. */
+function Avatar({
+    src,
+    name,
+    alt,
+    className,
+}: {
+    src?: string | null;
+    name: string;
+    alt?: string;
+    className: string;
+}) {
+    const [failed, setFailed] = useState(false);
+
+    if (src && !failed) {
+        return (
+            <img
+                src={src}
+                alt={alt ?? name}
+                onError={() => setFailed(true)}
+                className={`${className} object-cover`}
+            />
+        );
+    }
+
+    const initials = name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((w) => w[0].toUpperCase())
+        .join("");
+
+    return (
+        <span
+            className={`${className} grid place-items-center text-base font-bold text-indigo-700`}
+        >
+            {initials}
+        </span>
+    );
+}
 /* ------------------------------------------------------------------ */
 /*  HALAMAN                                                             */
 /* ------------------------------------------------------------------ */
+/** Satu kolom foto yang berjalan terus ke atas atau ke bawah. */
+function MarqueeColumn({
+    photos,
+    direction,
+}: {
+    photos: HeroPhoto[];
+    direction: "up" | "down";
+}) {
+    // Pastikan satu putaran cukup tinggi, lalu gandakan agar loop mulus.
+    const base = photos.length >= 3 ? photos : [...photos, ...photos];
+    const loop = [...base, ...base];
+
+    return (
+        <div className="group h-full overflow-hidden">
+            <div
+                className={`flex flex-col group-hover:[animation-play-state:paused] motion-reduce:animate-none ${
+                    direction === "up"
+                        ? "animate-marquee-up"
+                        : "animate-marquee-down"
+                }`}
+            >
+                {loop.map((p, i) => {
+                    const idx = i % base.length;
+
+                    return (
+                        <div key={`${p.posisi}-${i}`} className="pb-3 sm:pb-4">
+                            <img
+                                src={p.url}
+                                alt={i < base.length ? (p.alt ?? "") : ""}
+                                aria-hidden={i >= base.length}
+                                onError={hideBroken}
+                                className={`w-full rounded-3xl bg-indigo-100 object-cover shadow-xl ${
+                                    idx % 2 === 0
+                                        ? "h-52 sm:h-60"
+                                        : "h-64 sm:h-72"
+                                }`}
+                            />
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
 
 export default function Welcome({
     faculty = DEFAULT_FACULTY,
+    heroPhotos = DEFAULT_HERO_PHOTOS,
     stats = DEFAULT_STATS,
     programs: programsProp = DEFAULT_PROGRAMS,
     services: servicesProp = DEFAULT_SERVICES,
@@ -419,7 +647,7 @@ export default function Welcome({
                         <Reveal>
                             <p className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white/70 px-3 py-1 text-sm font-medium text-indigo-800 backdrop-blur">
                                 <span className="h-2 w-2 rounded-full bg-teal-500" />
-                                Universitas Al-Khairiyah
+                                {faculty.university}
                             </p>
                         </Reveal>
 
@@ -455,60 +683,26 @@ export default function Welcome({
                         </Reveal>
                     </div>
 
-                    {/* Kolase foto: mahasiswa + laboratorium */}
-                    <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
-                        <div className="grid grid-cols-5 grid-rows-6 gap-3 sm:gap-4">
-                            <Reveal
-                                delay={200}
-                                className="col-span-3 row-span-4 min-h-[17rem]"
-                            >
-                                <img
-                                    src={faculty.hero_image}
-                                    alt="Mahasiswa berdiskusi di kampus"
-                                    className="h-full w-full rounded-3xl bg-indigo-100 object-cover shadow-xl"
-                                />
-                            </Reveal>
-                            <Reveal
-                                delay={340}
-                                className="col-span-2 row-span-3"
-                            >
-                                <img
-                                    src={img(
-                                        "photo-1532094349884-543bc11b234d",
-                                        700,
-                                    )}
-                                    alt="Praktikum di laboratorium"
-                                    className="h-full w-full rounded-3xl bg-teal-100 object-cover shadow-xl"
-                                />
-                            </Reveal>
-                            <Reveal
-                                delay={480}
-                                className="col-span-2 row-span-3"
-                            >
-                                <img
-                                    src={img(
-                                        "photo-1522202176988-66273c2fd55f",
-                                        700,
-                                    )}
-                                    alt="Mahasiswa belajar kelompok"
-                                    className="h-full w-full rounded-3xl bg-amber-100 object-cover shadow-xl"
-                                />
-                            </Reveal>
-                            <Reveal
-                                delay={620}
-                                className="col-span-3 row-span-2"
-                            >
-                                <img
-                                    src={img(
-                                        "photo-1581091226825-a6a2a5aee158",
-                                        900,
-                                    )}
-                                    alt="Mahasiswa memakai peralatan laboratorium"
-                                    className="h-full w-full rounded-3xl bg-sky-100 object-cover shadow-xl"
-                                />
-                            </Reveal>
+                    {/* Kolase foto: berjalan otomatis atas-bawah */}
+                    <Reveal
+                        delay={200}
+                        className="relative mx-auto w-full max-w-xl lg:max-w-none"
+                    >
+                        <div className="grid h-[30rem] grid-cols-2 gap-3 [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)] sm:h-[34rem] sm:gap-4 lg:h-[36rem]">
+                            <MarqueeColumn
+                                direction="up"
+                                photos={heroPhotos.filter(
+                                    (_, i) => i % 2 === 0,
+                                )}
+                            />
+                            <MarqueeColumn
+                                direction="down"
+                                photos={heroPhotos.filter(
+                                    (_, i) => i % 2 === 1,
+                                )}
+                            />
                         </div>
-                    </div>
+                    </Reveal>
                 </div>
             </section>
 
@@ -519,7 +713,6 @@ export default function Welcome({
             >
                 <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
                     {stats.map((s, i) => {
-                        const Icon = ICONS[s.icon] ?? Building2;
                         return (
                             <Reveal
                                 key={s.id}
@@ -527,13 +720,24 @@ export default function Welcome({
                                 className="h-full"
                             >
                                 <article className="flex h-full flex-col items-start rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-indigo-900/5">
-                                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-indigo-100 text-indigo-700">
-                                        <Icon className="h-6 w-6" />
-                                    </span>
+                                    {s.image ? (
+                                        <img
+                                            src={s.image}
+                                            alt=""
+                                            onError={hideBroken}
+                                            className="h-12 w-12 rounded-2xl bg-indigo-100 object-cover"
+                                        />
+                                    ) : (
+                                        <span className="grid h-12 w-12 place-items-center rounded-2xl bg-indigo-100 text-indigo-700">
+                                            <Building2 className="h-6 w-6" />
+                                        </span>
+                                    )}
+
                                     <p className="mt-5 text-4xl font-extrabold text-indigo-950">
-                                        {formatNumber(s.value)}
+                                        <AnimatedNumber value={s.value} />
                                         {s.suffix}
                                     </p>
+
                                     <p className="mt-1 text-sm font-medium text-slate-600">
                                         {s.label}
                                     </p>
@@ -701,13 +905,7 @@ export default function Welcome({
                                         <p className="mt-2 flex-1 leading-relaxed text-indigo-200">
                                             {s.description}
                                         </p>
-                                        <Link
-                                            href={s.url ?? "#layanan"}
-                                            className="mt-6 inline-flex w-fit items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-indigo-900 transition hover:bg-teal-300 hover:text-indigo-950"
-                                        >
-                                            Pergi sekarang
-                                            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                                        </Link>
+                                        <ServiceLink url={s.url} />
                                     </article>
                                 </Reveal>
                             );
@@ -829,10 +1027,10 @@ export default function Welcome({
                                         {current.quote}
                                     </blockquote>
                                     <figcaption className="mt-8 flex items-center gap-4">
-                                        <img
+                                        <Avatar
                                             src={current.photo}
-                                            alt={current.name}
-                                            className="h-14 w-14 rounded-full bg-indigo-100 object-cover ring-4 ring-indigo-100"
+                                            name={current.name}
+                                            className="h-14 w-14 shrink-0 rounded-full bg-indigo-100 ring-4 ring-indigo-100"
                                         />
                                         <div>
                                             <p className="font-bold text-indigo-950">
@@ -873,10 +1071,11 @@ export default function Welcome({
                                                     : "opacity-60 ring-transparent hover:opacity-100"
                                             }`}
                                         >
-                                            <img
+                                            <Avatar
                                                 src={t.photo}
+                                                name={t.name}
                                                 alt=""
-                                                className="h-full w-full object-cover"
+                                                className="h-full w-full bg-indigo-100"
                                             />
                                         </button>
                                     ))}

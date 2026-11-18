@@ -91,7 +91,7 @@ type Props = {
 /* ------------------------------------------------------------------ */
 
 const card =
-    "h-full rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-lg shadow-indigo-900/5 backdrop-blur dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none";
+    "rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-lg shadow-indigo-900/5 backdrop-blur dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none";
 const titleCls = "text-lg font-bold text-indigo-950 dark:text-white";
 const mutedCls = "text-sm text-slate-500 dark:text-slate-400";
 const bodyCls = "text-slate-600 dark:text-slate-300";
@@ -504,12 +504,13 @@ export default function Dashboard({
 
                 {/* ============ BERITA + KEAMANAN ============ */}
                 <div className="relative grid gap-4 lg:grid-cols-3">
-                    <Reveal className="h-full lg:col-span-2">
+                    <Reveal className="lg:col-span-2">
                         <section className={card}>
                             <CardHeading
                                 title="Berita terbaru"
                                 text="5 berita terakhir yang dibuat"
                             />
+
                             {latestNews.length === 0 ? (
                                 <p className={mutedCls}>Belum ada berita.</p>
                             ) : (
@@ -523,6 +524,7 @@ export default function Dashboard({
                                                 <p className="truncate font-semibold text-indigo-950 dark:text-white">
                                                     {n.title}
                                                 </p>
+
                                                 <p className={mutedCls}>
                                                     {n.category} ·{" "}
                                                     {formatDate(
@@ -531,6 +533,7 @@ export default function Dashboard({
                                                     )}
                                                 </p>
                                             </div>
+
                                             <Pill
                                                 color={
                                                     n.is_published
@@ -549,12 +552,13 @@ export default function Dashboard({
                         </section>
                     </Reveal>
 
-                    <Reveal delay={150} className="h-full">
+                    <Reveal delay={150}>
                         <section className={card}>
                             <CardHeading
                                 title="Keamanan akun"
                                 text="Perlindungan login admin"
                             />
+
                             <div className="space-y-3">
                                 <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-white/10 dark:bg-white/[0.03]">
                                     <span
@@ -570,10 +574,12 @@ export default function Dashboard({
                                             <ShieldAlert className="h-5 w-5" />
                                         )}
                                     </span>
+
                                     <div className="flex-1">
                                         <p className="font-semibold text-indigo-950 dark:text-white">
                                             Two-factor auth
                                         </p>
+
                                         <p className={mutedCls}>
                                             {security.twoFactorEnabled
                                                 ? "Sudah aktif"
@@ -596,10 +602,12 @@ export default function Dashboard({
                                             <ShieldAlert className="h-5 w-5" />
                                         )}
                                     </span>
+
                                     <div className="flex-1">
                                         <p className="font-semibold text-indigo-950 dark:text-white">
                                             Email
                                         </p>
+
                                         <p className={mutedCls}>
                                             {security.emailVerified
                                                 ? "Sudah terverifikasi"
@@ -624,15 +632,17 @@ export default function Dashboard({
 
                 {/* ============ PROGRAM & KATEGORI ============ */}
                 <div className="relative grid gap-4 lg:grid-cols-3">
-                    <Reveal className="h-full">
+                    <Reveal>
                         <section className={card}>
                             <CardHeading
                                 title="Kelengkapan program"
                                 text={`${programCompleteness.complete} dari ${programCompleteness.total} program punya detail lengkap`}
                             />
+
                             <p className="text-4xl font-extrabold tabular-nums text-indigo-950 dark:text-white">
                                 {completion}%
                             </p>
+
                             <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
                                 <div
                                     className="h-full rounded-full bg-gradient-to-r from-indigo-600 to-teal-400 transition-all duration-700"
@@ -643,6 +653,7 @@ export default function Dashboard({
                             {programCompleteness.incomplete.length > 0 ? (
                                 <div className="mt-5 space-y-2">
                                     <p className={mutedCls}>Perlu dilengkapi</p>
+
                                     {programCompleteness.incomplete.map((p) => (
                                         <div
                                             key={p.id}
@@ -653,6 +664,7 @@ export default function Dashboard({
                                             >
                                                 {p.name}
                                             </span>
+
                                             <Pill>{p.degree}</Pill>
                                         </div>
                                     ))}
@@ -665,15 +677,17 @@ export default function Dashboard({
                         </section>
                     </Reveal>
 
-                    <Reveal delay={110} className="h-full">
+                    <Reveal delay={110}>
                         <section className={card}>
                             <CardHeading
                                 title="Sebaran program"
                                 text="Per jenjang dan akreditasi"
                             />
+
                             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
                                 Jenjang
                             </p>
+
                             <div className="space-y-3">
                                 {programsByDegree.map((d) => (
                                     <BarRow
@@ -684,9 +698,11 @@ export default function Dashboard({
                                     />
                                 ))}
                             </div>
+
                             <p className="mb-2 mt-6 text-xs font-semibold uppercase tracking-wide text-slate-400">
                                 Akreditasi
                             </p>
+
                             <div className="space-y-3">
                                 {programsByAccreditation.map((a) => (
                                     <BarRow
@@ -700,12 +716,13 @@ export default function Dashboard({
                         </section>
                     </Reveal>
 
-                    <Reveal delay={220} className="h-full">
+                    <Reveal delay={220}>
                         <section className={card}>
                             <CardHeading
                                 title="Berita per kategori"
                                 text="Distribusi konten berita"
                             />
+
                             {newsByCategory.length === 0 ? (
                                 <p className={mutedCls}>Belum ada data.</p>
                             ) : (
@@ -726,8 +743,8 @@ export default function Dashboard({
 
                 {/* ============ STATISTIK + TESTIMONI ============ */}
                 <div className="relative grid gap-4 lg:grid-cols-3">
-                    <Reveal className="h-full">
-                        <section className="relative h-full overflow-hidden rounded-3xl bg-gradient-to-b from-indigo-950 to-indigo-900 p-6 text-white shadow-xl shadow-indigo-950/20">
+                    <Reveal>
+                        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-indigo-950 to-indigo-900 p-6 text-white shadow-xl shadow-indigo-950/20">
                             <Blob className="-right-12 -top-12 h-48 w-48 bg-gradient-to-br from-teal-400/30 to-emerald-300/10" />
                             <Blob className="-bottom-16 -left-12 h-48 w-48 bg-gradient-to-br from-indigo-500/40 to-sky-400/20" />
 
@@ -760,7 +777,7 @@ export default function Dashboard({
                         </section>
                     </Reveal>
 
-                    <Reveal delay={150} className="h-full lg:col-span-2">
+                    <Reveal delay={150} className="lg:col-span-2">
                         <section className={card}>
                             <CardHeading
                                 title="Testimoni terbaru"
@@ -769,41 +786,48 @@ export default function Dashboard({
                             {latestTestimonials.length === 0 ? (
                                 <p className={mutedCls}>Belum ada testimoni.</p>
                             ) : (
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    {latestTestimonials.map((t) => (
-                                        <figure
-                                            key={t.id}
-                                            className="flex flex-col rounded-2xl border border-slate-200 bg-slate-50/70 p-5 dark:border-white/10 dark:bg-white/[0.03]"
-                                        >
-                                            <Quote className="h-6 w-6 text-teal-500" />
-                                            <blockquote
-                                                className={`mt-3 line-clamp-3 flex-1 leading-relaxed ${bodyCls}`}
+                                <div className="max-h-[420px] overflow-y-auto pr-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-indigo-200 dark:scrollbar-thumb-indigo-500/30">
+                                    <div className="grid gap-4 sm:grid-cols-2">
+                                        {latestTestimonials.map((t) => (
+                                            <figure
+                                                key={t.id}
+                                                className="flex flex-col rounded-2xl border border-slate-200 bg-slate-50/70 p-5 dark:border-white/10 dark:bg-white/[0.03]"
                                             >
-                                                {t.quote}
-                                            </blockquote>
-                                            <figcaption className="mt-5 flex items-center gap-3">
-                                                <Avatar
-                                                    name={t.name}
-                                                    photo={t.photo}
-                                                />
-                                                <div className="min-w-0">
-                                                    <p className="truncate font-bold text-indigo-950 dark:text-white">
-                                                        {t.name}
-                                                    </p>
-                                                    <p
-                                                        className={`truncate ${mutedCls}`}
-                                                    >
-                                                        {t.job}, {t.company}
-                                                    </p>
-                                                    <p
-                                                        className={`truncate ${mutedCls}`}
-                                                    >
-                                                        {t.batch}
-                                                    </p>
-                                                </div>
-                                            </figcaption>
-                                        </figure>
-                                    ))}
+                                                <Quote className="h-6 w-6 text-teal-500" />
+
+                                                <blockquote
+                                                    className={`mt-3 line-clamp-3 flex-1 leading-relaxed ${bodyCls}`}
+                                                >
+                                                    {t.quote}
+                                                </blockquote>
+
+                                                <figcaption className="mt-5 flex items-center gap-3">
+                                                    <Avatar
+                                                        name={t.name}
+                                                        photo={t.photo}
+                                                    />
+
+                                                    <div className="min-w-0">
+                                                        <p className="truncate font-bold text-indigo-950 dark:text-white">
+                                                            {t.name}
+                                                        </p>
+
+                                                        <p
+                                                            className={`truncate ${mutedCls}`}
+                                                        >
+                                                            {t.job}, {t.company}
+                                                        </p>
+
+                                                        <p
+                                                            className={`truncate ${mutedCls}`}
+                                                        >
+                                                            {t.batch}
+                                                        </p>
+                                                    </div>
+                                                </figcaption>
+                                            </figure>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </section>
