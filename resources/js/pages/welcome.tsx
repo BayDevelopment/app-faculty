@@ -635,7 +635,6 @@ export default function Welcome({
     return (
         <PublicLayout faculty={faculty}>
             <Head title={faculty.name} />
-
             {/* ============ HERO ============ */}
             <section id="beranda" className="relative overflow-hidden">
                 <Blob className="-left-32 -top-24 h-[28rem] w-[28rem] bg-gradient-to-br from-indigo-400/50 to-sky-300/40" />
@@ -705,7 +704,6 @@ export default function Welcome({
                     </Reveal>
                 </div>
             </section>
-
             {/* ============ STATISTIK ============ */}
             <section
                 aria-label="Angka fakultas"
@@ -747,7 +745,6 @@ export default function Welcome({
                     })}
                 </div>
             </section>
-
             {/* ============ VISI & MISI ============ */}
             <section
                 id="visi-misi"
@@ -795,7 +792,6 @@ export default function Welcome({
                     </div>
                 </div>
             </section>
-
             {/* ============ PROGRAM STUDI ============ */}
             <section
                 id="prodi"
@@ -867,7 +863,6 @@ export default function Welcome({
                     />
                 </div>
             </section>
-
             {/* ============ LAYANAN ============ */}
             <section
                 id="layanan"
@@ -926,7 +921,6 @@ export default function Welcome({
                     />
                 </div>
             </section>
-
             {/* ============ BERITA ============ */}
             <section
                 id="berita"
@@ -1000,7 +994,6 @@ export default function Welcome({
                     </div>
                 </div>
             </section>
-
             {/* ============ KOMENTAR ALUMNI ============ */}
             {current && (
                 <section
@@ -1085,75 +1078,86 @@ export default function Welcome({
                     </div>
                 </section>
             )}
-
             {/* ============ LOKASI ============ */}
             <section
                 id="lokasi"
-                className="relative overflow-hidden py-20 lg:py-28"
+                className="relative overflow-hidden py-16 sm:py-20 lg:py-28"
             >
                 <Blob className="-left-24 top-10 h-80 w-80 bg-gradient-to-br from-teal-200/50 to-sky-200/40" />
+
                 <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <SectionHeading
                         title="Lokasi kampus"
                         text="Kunjungi kami langsung atau hubungi untuk informasi lebih lanjut."
                     />
-
-                    <div className="mt-12 grid gap-6 lg:grid-cols-5">
-                        <Reveal className="lg:col-span-2">
-                            <div className="flex h-full flex-col gap-5 rounded-3xl border border-slate-200 bg-white/80 p-7 backdrop-blur">
-                                <div className="flex gap-4">
-                                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-indigo-100 text-indigo-700">
+                    <div className="mt-8 grid grid-cols-1 gap-6 sm:mt-10 lg:mt-12 lg:grid-cols-5 lg:items-stretch lg:gap-8">
+                        {/* INFORMASI LOKASI */}
+                        <Reveal className="w-full lg:col-span-2">
+                            <div className="flex h-full flex-col gap-5 rounded-3xl border border-slate-200 bg-white/80 p-5 shadow-sm backdrop-blur sm:p-6 lg:p-7">
+                                {/* Alamat */}
+                                <div className="flex items-start gap-3 sm:gap-4">
+                                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-indigo-100 text-indigo-700 sm:h-11 sm:w-11">
                                         <MapPin className="h-5 w-5" />
                                     </span>
-                                    <div>
+
+                                    <div className="min-w-0">
                                         <p className="font-bold text-indigo-950">
                                             Alamat
                                         </p>
-                                        <p className="mt-1 text-slate-600">
+
+                                        <p className="mt-1 break-words text-sm leading-relaxed text-slate-600 sm:text-base">
                                             {faculty.university}
                                         </p>
-                                        <p className="text-slate-600">
+
+                                        <p className="break-words text-sm leading-relaxed text-slate-600 sm:text-base">
                                             {faculty.address}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="flex gap-4">
-                                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-teal-100 text-teal-700">
+                                {/* Email */}
+                                <div className="flex items-start gap-3 sm:gap-4">
+                                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-teal-100 text-teal-700 sm:h-11 sm:w-11">
                                         <Mail className="h-5 w-5" />
                                     </span>
-                                    <div>
+
+                                    <div className="min-w-0">
                                         <p className="font-bold text-indigo-950">
                                             Email
                                         </p>
+
                                         <a
                                             href={`mailto:${faculty.email}`}
-                                            className="mt-1 block text-slate-600 hover:text-indigo-700"
+                                            className="mt-1 block break-all text-sm leading-relaxed text-slate-600 transition hover:text-indigo-700 sm:text-base"
                                         >
                                             {faculty.email}
                                         </a>
                                     </div>
                                 </div>
 
-                                <div className="flex gap-4">
-                                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-amber-100 text-amber-700">
+                                {/* Telepon */}
+                                <div className="flex items-start gap-3 sm:gap-4">
+                                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-100 text-amber-700 sm:h-11 sm:w-11">
                                         <Phone className="h-5 w-5" />
                                     </span>
-                                    <div>
+
+                                    <div className="min-w-0">
                                         <p className="font-bold text-indigo-950">
                                             Telepon
                                         </p>
-                                        <p className="mt-1 text-slate-600">
+
+                                        <p className="mt-1 text-sm leading-relaxed text-slate-600 sm:text-base">
                                             {faculty.phone}
                                         </p>
                                     </div>
                                 </div>
 
+                                {/* Tombol Google Maps */}
                                 <a
                                     href={MAP_LINK}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="mt-auto inline-flex w-fit items-center gap-2 rounded-xl bg-indigo-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-800"
+                                    className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-800 sm:w-fit"
                                 >
                                     Buka di Google Maps
                                     <ArrowRight className="h-4 w-4" />
@@ -1161,16 +1165,20 @@ export default function Welcome({
                             </div>
                         </Reveal>
 
-                        <Reveal delay={150} className="lg:col-span-3">
-                            <div className="h-full min-h-[22rem] overflow-hidden rounded-3xl border border-slate-200 shadow-lg shadow-indigo-900/5">
-                                <iframe
-                                    title="Peta lokasi Universitas Al-Khairiyah"
-                                    src={MAP_EMBED}
-                                    className="h-full min-h-[22rem] w-full"
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer-when-downgrade"
-                                    allowFullScreen
-                                />
+                        {/* GOOGLE MAPS */}
+                        <Reveal delay={150} className="w-full lg:col-span-3">
+                            <div className="w-full overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-lg shadow-indigo-900/5">
+                                {/* aspect ratio responsive */}
+                                <div className="relative w-full aspect-[4/3] sm:aspect-video lg:aspect-[16/9]">
+                                    <iframe
+                                        title="Peta lokasi Universitas Al-Khairiyah"
+                                        src={MAP_EMBED}
+                                        className="absolute inset-0 h-full w-full border-0"
+                                        loading="lazy"
+                                        referrerPolicy="no-referrer-when-downgrade"
+                                        allowFullScreen
+                                    />
+                                </div>
                             </div>
                         </Reveal>
                     </div>

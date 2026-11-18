@@ -59,17 +59,22 @@ export default function PublicLayout({
         <div className="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased">
             {/* ============ NAVBAR ============ */}
             <header
-                className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
+                className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
                     menuOpen
-                        ? "border-slate-200 bg-white shadow-sm shadow-indigo-900/5"
+                        ? "bg-white shadow-lg shadow-indigo-950/10"
                         : solid
-                          ? "border-white/60 bg-white/75 shadow-sm shadow-indigo-900/5 backdrop-blur-lg"
-                          : "border-transparent bg-transparent"
+                          ? "border-b border-white/60 bg-white/80 shadow-sm shadow-indigo-900/5 backdrop-blur-xl"
+                          : "border-b border-transparent bg-transparent"
                 }`}
             >
-                <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                    <a href="/#beranda" className="flex items-center gap-3">
-                        <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white shadow-md">
+                <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-[68px] sm:px-6 lg:h-16 lg:px-8">
+                    {/* LOGO */}
+                    <a
+                        href="/#beranda"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-3"
+                    >
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white shadow-md sm:h-11 sm:w-11">
                             <img
                                 src="/logo_unival.png"
                                 alt="Logo Universitas Al-Khairiyah"
@@ -78,15 +83,17 @@ export default function PublicLayout({
                         </span>
 
                         <span className="leading-tight">
-                            <span className="block text-sm font-bold text-indigo-950">
+                            <span className="block text-sm font-bold text-indigo-950 sm:text-[15px]">
                                 {info.name}
                             </span>
-                            <span className="block text-xs text-slate-500">
+
+                            <span className="block text-[11px] text-slate-500 sm:text-xs">
                                 {info.university}
                             </span>
                         </span>
                     </a>
 
+                    {/* DESKTOP NAV */}
                     <nav
                         className="hidden items-center gap-1 lg:flex"
                         aria-label="Navigasi utama"
@@ -95,31 +102,36 @@ export default function PublicLayout({
                             <a
                                 key={item.href}
                                 href={item.href}
-                                className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-700"
+                                className="rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-all duration-200 hover:bg-indigo-50 hover:text-indigo-700"
                             >
                                 {item.label}
                             </a>
                         ))}
                     </nav>
 
-                    {/* Hamburger: ikon berputar dan saling menggantikan */}
+                    {/* HAMBURGER MOBILE + TABLET */}
                     <button
                         type="button"
                         onClick={() => setMenuOpen((v) => !v)}
-                        className="relative grid h-10 w-10 place-items-center rounded-lg text-indigo-900 transition hover:bg-indigo-50 lg:hidden"
+                        className={`relative z-[60] grid h-11 w-11 place-items-center rounded-xl transition-all duration-300 lg:hidden ${
+                            menuOpen
+                                ? "bg-indigo-50 text-indigo-700"
+                                : "text-indigo-900 hover:bg-indigo-50"
+                        }`}
                         aria-label={menuOpen ? "Tutup menu" : "Buka menu"}
                         aria-expanded={menuOpen}
                         aria-controls="mobile-menu"
                     >
                         <Menu
-                            className={`absolute h-5 w-5 transition-all duration-300 motion-reduce:transition-none ${
+                            className={`absolute h-5 w-5 transition-all duration-300 ease-out ${
                                 menuOpen
                                     ? "rotate-90 scale-50 opacity-0"
                                     : "rotate-0 scale-100 opacity-100"
                             }`}
                         />
+
                         <X
-                            className={`absolute h-5 w-5 transition-all duration-300 motion-reduce:transition-none ${
+                            className={`absolute h-5 w-5 transition-all duration-300 ease-out ${
                                 menuOpen
                                     ? "rotate-0 scale-100 opacity-100"
                                     : "-rotate-90 scale-50 opacity-0"
@@ -128,21 +140,21 @@ export default function PublicLayout({
                     </button>
                 </div>
 
-                {/* Menu seluler: selalu dirender agar bisa dianimasikan masuk dan keluar */}
+                {/* MOBILE / TABLET MENU */}
                 <div
                     id="mobile-menu"
                     aria-hidden={!menuOpen}
-                    className={`grid transition-[grid-template-rows,opacity,visibility] duration-300 ease-out motion-reduce:transition-none lg:hidden ${
+                    className={`absolute inset-x-0 top-full overflow-hidden bg-white shadow-xl shadow-indigo-950/10 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden ${
                         menuOpen
-                            ? "visible grid-rows-[1fr] opacity-100"
-                            : "invisible grid-rows-[0fr] opacity-0"
+                            ? "visible max-h-[calc(100vh-4rem)] translate-y-0 opacity-100"
+                            : "invisible max-h-0 -translate-y-3 opacity-0"
                     }`}
                 >
-                    <div className="overflow-hidden">
-                        <nav
-                            className="border-t border-slate-200 px-4 py-3"
-                            aria-label="Navigasi seluler"
-                        >
+                    <nav
+                        className="mx-auto w-full max-w-2xl px-5 py-5 sm:px-8 sm:py-6"
+                        aria-label="Navigasi seluler"
+                    >
+                        <div className="space-y-1.5">
                             {NAV.map((item, i) => (
                                 <a
                                     key={item.href}
@@ -150,20 +162,22 @@ export default function PublicLayout({
                                     onClick={() => setMenuOpen(false)}
                                     style={{
                                         transitionDelay: menuOpen
-                                            ? `${80 + i * 45}ms`
+                                            ? `${60 + i * 45}ms`
                                             : "0ms",
                                     }}
-                                    className={`block rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 transition-all duration-300 hover:bg-indigo-50 hover:text-indigo-700 motion-reduce:transition-none ${
+                                    className={`group flex w-full items-center justify-center rounded-2xl px-5 py-3.5 text-center text-[15px] font-semibold text-slate-700 transition-all duration-300 ease-out hover:bg-indigo-50 hover:text-indigo-700 active:scale-[0.98] sm:py-4 sm:text-base ${
                                         menuOpen
                                             ? "translate-y-0 opacity-100"
-                                            : "-translate-y-2 opacity-0"
+                                            : "-translate-y-4 opacity-0"
                                     }`}
                                 >
-                                    {item.label}
+                                    <span className="transition-transform duration-300 group-hover:scale-[1.02]">
+                                        {item.label}
+                                    </span>
                                 </a>
                             ))}
-                        </nav>
-                    </div>
+                        </div>
+                    </nav>
                 </div>
             </header>
 
@@ -249,7 +263,7 @@ export default function PublicLayout({
                 {/* COPYRIGHT */}
                 <div className="relative border-t border-white/10">
                     <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-sm text-indigo-300 sm:flex-row sm:px-6 lg:px-8">
-                        <p>
+                        <p className="text-center text-sm leading-relaxed text-slate-500 lg:text-left">
                             © {new Date().getFullYear()} {info.name},{" "}
                             {info.university}. Semua hak dilindungi.
                         </p>
