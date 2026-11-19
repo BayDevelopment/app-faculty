@@ -25,44 +25,45 @@
     <meta name="theme-color" content="#312e81">
     <meta name="msapplication-TileColor" content="#312e81">
 
-    <link rel="icon" type="image/png" href="/logo_unival.png">
+    {{-- Favicon (Google butuh gambar persegi, kelipatan 48px) --}}
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/logo_unival.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
 
-    <link rel="apple-touch-icon" href="/logo_unival.png">
-
-
+    {{-- Open Graph --}}
     <meta property="og:type" content="website">
-
     <meta property="og:locale" content="id_ID">
-
     <meta property="og:title" content="Fakultas Ekonomi dan Bisnis - Universitas Al-Khairiyah">
-
     <meta property="og:description"
         content="Website resmi Fakultas Ekonomi dan Bisnis Universitas Al-Khairiyah Cilegon. Informasi program studi, layanan, berita, alumni, dan kegiatan fakultas.">
-
     <meta property="og:url" content="https://www.feb.unival-cilegon.ac.id/">
-
     <meta property="og:site_name" content="Fakultas Ekonomi dan Bisnis Universitas Al-Khairiyah">
-
     <meta property="og:image" content="https://www.feb.unival-cilegon.ac.id/logo_unival.png">
-
     <meta property="og:image:alt" content="Logo Universitas Al-Khairiyah">
-    <meta name="twitter:card" content="summary_large_image">
 
+    {{-- Twitter (logo persegi, jadi pakai "summary" agar tidak terpotong) --}}
+    <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Fakultas Ekonomi dan Bisnis - Universitas Al-Khairiyah">
-
     <meta name="twitter:description"
         content="Website resmi Fakultas Ekonomi dan Bisnis Universitas Al-Khairiyah Cilegon.">
-
     <meta name="twitter:image" content="https://www.feb.unival-cilegon.ac.id/logo_unival.png">
 
     <meta name="mobile-web-app-capable" content="yes">
-
     <meta name="apple-mobile-web-app-capable" content="yes">
-
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
     <meta name="apple-mobile-web-app-title" content="FEB UNIVAL">
 
+    {{-- Nama situs untuk hasil pencarian Google --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Fakultas Ekonomi dan Bisnis Universitas Al-Khairiyah",
+        "alternateName": ["FEB UNIVAL", "FEB Universitas Al-Khairiyah"],
+        "url": "https://www.feb.unival-cilegon.ac.id/"
+    }
+    </script>
 
     <script>
         (function() {
@@ -108,5 +109,3 @@
 <body class="font-sans antialiased">
     <x-inertia::app />
 </body>
-
-</html>

@@ -101,14 +101,21 @@ type Paginated<T> = {
 };
 
 type Props = {
-    faculty?: Faculty;
-    heroPhotos?: HeroPhoto[];
-    stats?: Stat[];
-    programs?: Paginated<Program> | Program[];
-    services?: Paginated<Service> | Service[];
-    news?: News[];
-    testimonials?: Testimonial[];
+    faculty?: Faculty | null;
+    heroPhotos?: HeroPhoto[] | null;
+    stats?: Stat[] | null;
+    programs?: Paginated<Program> | Program[] | null;
+    services?: Paginated<Service> | Service[] | null;
+    news?: News[] | null;
+    testimonials?: Testimonial[] | null;
 };
+
+/**
+ * false = data HANYA dari database. Kalau kosong / belum di-seed, tampil
+ * pesan "admin belum memposting konten".
+ * true  = pakai data contoh di bawah (hanya untuk mencoba tampilan).
+ */
+const USE_SAMPLE_DATA = false;
 
 /* ------------------------------------------------------------------ */
 /*  DATA CONTOH — dipakai selama controller belum mengirim props        */
@@ -568,6 +575,59 @@ function Avatar({
         </span>
     );
 }
+
+/** Tampil bila admin belum memposting konten apa pun. */
+function EmptyContent({
+    name,
+    university,
+}: {
+    name?: string;
+    university?: string;
+}) {
+    return (
+        <main className="relative grid min-h-screen place-items-center overflow-hidden bg-gradient-to-b from-white to-indigo-50 px-6">
+            <Blob className="-left-32 -top-24 h-[28rem] w-[28rem] bg-gradient-to-br from-indigo-400/40 to-sky-300/30" />
+            <Blob className="-right-32 bottom-0 h-[28rem] w-[28rem] bg-gradient-to-br from-teal-300/40 to-emerald-200/30" />
+
+            <div className="relative mx-auto max-w-xl text-center">
+                <div className="flex items-center justify-center gap-6">
+                    <img
+                        src="https://cdn.simpleicons.org/react/61DAFB"
+                        alt="React"
+                        onError={hideBroken}
+                        className="h-16 w-16 animate-[spin_12s_linear_infinite] motion-reduce:animate-none"
+                    />
+                    <span className="text-3xl font-light text-slate-400">
+                        +
+                    </span>
+                    <img
+                        src="https://cdn.simpleicons.org/laravel/FF2D20"
+                        alt="Laravel"
+                        onError={hideBroken}
+                        className="h-16 w-16 animate-pulse motion-reduce:animate-none"
+                    />
+                </div>
+
+                {university && (
+                    <p className="mt-8 inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white/70 px-3 py-1 text-sm font-medium text-indigo-800 backdrop-blur">
+                        <span className="h-2 w-2 rounded-full bg-amber-500" />
+                        {university}
+                    </p>
+                )}
+
+                <h1 className="mt-5 text-3xl font-extrabold tracking-tight text-indigo-950 sm:text-4xl">
+                    Konten belum tersedia
+                </h1>
+
+                <p className="mt-4 text-base leading-relaxed text-slate-600">
+                    Admin belum memposting konten di website
+                    {name ? ` ${name}` : ""} ini. Silakan kembali lagi nanti.
+                </p>
+            </div>
+        </main>
+    );
+}
+
 /* ------------------------------------------------------------------ */
 /*  HALAMAN                                                             */
 /* ------------------------------------------------------------------ */
@@ -579,6 +639,9 @@ function MarqueeColumn({
     photos: HeroPhoto[];
     direction: "up" | "down";
 }) {
+    // Kolom kosong (mis. hanya ada 1 foto) tidak dirender.
+    if (photos.length === 0) return null;
+
     // Pastikan satu putaran cukup tinggi, lalu gandakan agar loop mulus.
     const base = photos.length >= 3 ? photos : [...photos, ...photos];
     const loop = [...base, ...base];
@@ -616,21 +679,49 @@ function MarqueeColumn({
     );
 }
 
-export default function Welcome({
-    faculty = DEFAULT_FACULTY,
-    heroPhotos = DEFAULT_HERO_PHOTOS,
-    stats = DEFAULT_STATS,
-    programs: programsProp = DEFAULT_PROGRAMS,
-    services: servicesProp = DEFAULT_SERVICES,
-    news = DEFAULT_NEWS,
-    testimonials = DEFAULT_TESTIMONIALS,
-}: Props) {
+export default function Welcome(props: Props) {
     const [activeTestimonial, setActiveTestimonial] = useState(0);
 
-    const programs = toPage(programsProp);
-    const services = toPage(servicesProp);
+    // null / tidak dikirim controller => kosong (atau data contoh bila USE_SAMPLE_DATA = true)
+    const faculty = props.faculty ?? (USE_SAMPLE_DATA ? DEFAULT_FACULTY : null);
+    const heroPhotos =
+        props.heroPhotos ?? (USE_SAMPLE_DATA ? DEFAULT_HERO_PHOTOS : []);
+    const stats = props.stats ?? (USE_SAMPLE_DATA ? DEFAULT_STATS : []);
+    const programs = toPage(
+        props.programs ?? (USE_SAMPLE_DATA ? DEFAULT_PROGRAMS : []),
+    );
+    const services = toPage(
+        props.services ?? (USE_SAMPLE_DATA ? DEFAULT_SERVICES : []),
+    );
+    const news = props.news ?? (USE_SAMPLE_DATA ? DEFAULT_NEWS : []);
+    const testimonials =
+        props.testimonials ?? (USE_SAMPLE_DATA ? DEFAULT_TESTIMONIALS : []);
 
     const current = testimonials[activeTestimonial];
+
+    // Data fakultas belum ada, atau semua section kosong: tampilkan pesan
+    // "admin belum memposting konten". Early return ini aman karena hook
+    // (useState) sudah dipanggil di atas.
+    const isEmpty =
+        !faculty ||
+        (heroPhotos.length === 0 &&
+            stats.length === 0 &&
+            programs.data.length === 0 &&
+            services.data.length === 0 &&
+            news.length === 0 &&
+            testimonials.length === 0);
+
+    if (!faculty || isEmpty) {
+        return (
+            <>
+                <Head title={faculty?.name ?? "Beranda"} />
+                <EmptyContent
+                    name={faculty?.name}
+                    university={faculty?.university}
+                />
+            </>
+        );
+    }
 
     return (
         <PublicLayout faculty={faculty}>
@@ -776,7 +867,7 @@ export default function Welcome({
                             </h3>
                         </Reveal>
                         <ul className="space-y-3">
-                            {faculty.missions.map((m, i) => (
+                            {(faculty.missions ?? []).map((m, i) => (
                                 <Reveal as="li" key={i} delay={i * 110}>
                                     <div className="flex gap-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-5">
                                         <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-teal-100 text-teal-700">
